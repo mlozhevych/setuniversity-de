@@ -1,5 +1,3 @@
--- SET GLOBAL local_infile = 1;
---
 CREATE DATABASE IF NOT EXISTS AdTech;
 
 -- RawCampaigns Table
@@ -21,9 +19,8 @@ CREATE TABLE `AdTech`.`RawCampaigns` (
 -- На той випадок якщо на сервері заборонено завантаження (LOAD DATA LOCAL INFILE) файлів (під root).
 -- SHOW GLOBAL VARIABLES LIKE 'local_infile'; -- Перевірка
 -- SET GLOBAL local_infile = 1;
--- https://drive.google.com/file/d/1I54DEoDfPohEPbLmHWWW-iED8MsdFeId/view
+
 -- Load Campaign data
--- LOAD DATA INFILE '/docker-entrypoint-initdb.d/data/campaigns.csv' -- '/Users/user/Downloads/campaigns.csv'
 LOAD DATA INFILE '/var/lib/mysql-files/campaigns.csv'
 INTO TABLE `AdTech`.`RawCampaigns`
 CHARACTER SET utf8mb4
@@ -33,7 +30,6 @@ IGNORE 1 ROWS
 (CampaignID, AdvertiserName, CampaignName, CampaignStartDate, CampaignEndDate,
  TargetingCriteria, AdSlotSize, Budget, RemainingBudget);
 
--- https://drive.google.com/file/d/18gEty-UqAd0UkuVwL4V2rdTCDaBK8406/view
 -- RawUsers Table
 DROP TABLE IF EXISTS `AdTech`.`RawUsers`;
 
@@ -82,7 +78,6 @@ CREATE TABLE `AdTech`.`RawEvents` (
     `RemainingBudget`            DECIMAL(14,2)    NOT NULL
 );
 
--- https://drive.google.com/file/d/1B7GmvhSeLA8rot3-_0mBCE1bxhyFZ65L/view
 -- Load Events data
 LOAD DATA INFILE '/var/lib/mysql-files/events.csv'
 INTO TABLE `AdTech`.`RawEvents`
