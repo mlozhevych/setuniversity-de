@@ -1,0 +1,40 @@
+__pycache__/
+*.pyc
+*.$py.class
+
+venv/
+.venv/
+env/
+.env/
+
+build/
+dist/
+*.egg-info/
+.nox/
+.tox/
+
+.coverage
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+*.log
+*.swo # Файли підкачки Vim
+
+.idea/         # PyCharm
+.vscode/       # VS Code
+*.sublime-project # Sublime Text
+*.sublime-workspace # Sublime Text
+*.komodoproject # Komodo IDE
+
+*.sqlite3
+db.sqlite3
+
+# MacOS specific files
+.DS_Store
+
+# Windows specific files
+Thumbs.db
+
+/HW-1/docker/minio-data/
+/HW-1/docker/mydata/
+/HW-1/docker/postgres-data/
