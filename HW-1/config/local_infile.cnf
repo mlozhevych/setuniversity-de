@@ -1,0 +1,15 @@
+[mysqld]
+local_infile = 1          # дозволяє LOCAL на сервері
+innodb_buffer_pool_size      = 2G        # ≈ 60–70 % доступної RAM
+bulk_insert_buffer_size      = 512M      # буфер для MyISAM; InnoDB також виграє
+innodb_log_buffer_size       = 128M
+innodb_log_file_size         = 512M      # у парі з buffer_pool_size
+innodb_flush_log_at_trx_commit = 2       # fsync раз на секунду, а не кожен COMMIT
+innodb_flush_method          = O_DIRECT
+innodb_doublewrite           = 0         # лише якщо диск із живим кешем
+sync_binlog                  = 0         # немає binlog → немає fsync
+tmp_table_size               = 512M      # менше конверсій у on-disk «tmp» таблиці
+max_heap_table_size          = 512M
+
+[mysql]
+local_infile = 1          # те саме для клієнта mysql, що запускає entrypoint
