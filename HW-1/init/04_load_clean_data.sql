@@ -206,19 +206,19 @@ DELIMITER ;
 -- 4.1. Заповнення `Events`
 -- Ми приєднуємо `RawEvents` до всіх необхідних таблиць (`Campaigns`, `DeviceTypes`, `Locations`),
 -- щоб отримати правильні зовнішні ключі.
-CALL `AdTech`.`LoadEventsInBatches`(50000);
--- INSERT IGNORE INTO `AdTech`.`Events` (EventID, CampaignID, UserID, DeviceTypeID, LocationID, Timestamp, BidAmount, AdCost)
--- SELECT
---     re.EventID,
---     c.CampaignID,
---     re.UserID,
---     re.DeviceTypeID,
---     re.LocationID,
---     re.Timestamp,
---     re.BidAmount,
---     re.AdCost
--- FROM `AdTech`.`RawEvents` re
--- JOIN `AdTech`.`Campaigns` c ON re.CampaignName = c.CampaignName;
+-- CALL `AdTech`.`LoadEventsInBatches`(50000);
+INSERT IGNORE INTO `AdTech`.`Events` (EventID, CampaignID, UserID, DeviceTypeID, LocationID, Timestamp, BidAmount, AdCost)
+SELECT
+    re.EventID,
+    c.CampaignID,
+    re.UserID,
+    re.DeviceTypeID,
+    re.LocationID,
+    re.Timestamp,
+    re.BidAmount,
+    re.AdCost
+FROM `AdTech`.`RawEvents` re
+JOIN `AdTech`.`Campaigns` c ON re.CampaignName = c.CampaignName;
 -- LEFT JOIN `AdTech`.`DeviceTypes` dt ON re.Device = dt.DeviceName
 -- LEFT JOIN `AdTech`.`Locations` l ON re.Location = l.CountryName;
 
