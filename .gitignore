@@ -20,7 +20,7 @@ dist/
 *.log
 *.swo # Файли підкачки Vim
 
-.idea/         # PyCharm
+.idea/*         # PyCharm
 .vscode/       # VS Code
 *.sublime-project # Sublime Text
 *.sublime-workspace # Sublime Text
@@ -35,6 +35,12 @@ db.sqlite3
 # Windows specific files
 Thumbs.db
 
-/HW-1/docker/minio-data/
-/HW-1/docker/mydata/
-/HW-1/docker/postgres-data/
+HW-2/analyze-ads/.env
+/HW-2/analyze-ads/src/analyze_ads/scripts/old/
+/HW-2/analyze-ads/src/analyze_ads/queries/old/
+/HW-2/analyze-ads/correlation_results.json
+
+.idea/dataSources.xml
+.idea/sqldialects.xml
+.idea/vcs.xml
+.idea/misc.xml
