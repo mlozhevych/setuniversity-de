@@ -11,7 +11,7 @@
 
 Стек: Docker, Docker Compose, Python, MySQL.
 
-### [Інструмент для аналізу рекламних даних (AdTech)](HW-2/analyze-ads/README.md)
+### [Домашня робота №1: Інструмент для аналізу рекламних даних (AdTech)](HW-2/analyze-ads/README.md)
 
 Комплексний інструмент для аналітики рекламних даних.
 
