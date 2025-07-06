@@ -6,6 +6,7 @@ venv/
 .venv/
 env/
 .env/
+**/.env
 
 build/
 dist/
@@ -39,6 +40,7 @@ HW-2/analyze-ads/.env
 /HW-2/analyze-ads/src/analyze_ads/scripts/old/
 /HW-2/analyze-ads/src/analyze_ads/queries/old/
 /HW-2/analyze-ads/correlation_results.json
+**/query.sql
 
 .idea/dataSources.xml
 .idea/sqldialects.xml
