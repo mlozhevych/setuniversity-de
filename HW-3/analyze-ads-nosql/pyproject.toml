@@ -5,7 +5,7 @@ description = ""
 authors = [
     {name = "Mykyta Lozhevych",email = "m.lozhevych@setuniversity.edu.ua"}
 ]
-readme = "README.md"
+#readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
     "pymongo (>=4.13.2,<5.0.0)",
