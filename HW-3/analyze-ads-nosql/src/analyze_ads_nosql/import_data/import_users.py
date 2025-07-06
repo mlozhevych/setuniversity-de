@@ -48,7 +48,7 @@ def import_users() -> None:
     documents = [row_to_document(r) for _, r in df.iterrows()]
 
     # 4. Insert
-    uri = build_mongo_uri()
+    uri = build_mongo_uri(use_docker=True)
     safe_uri_for_log = uri.replace(f":{os.getenv('MONGO_PASSWORD', '')}@", ":***@")
     print(f"Connecting to {safe_uri_for_log} …")
 

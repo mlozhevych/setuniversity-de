@@ -12,6 +12,7 @@ import pandas as pd
 from analyze_ads_nosql.utils import gdrive_download, build_mongo_uri
 from dotenv import load_dotenv
 from pymongo import MongoClient, InsertOne, ASCENDING, DESCENDING
+from pymongo.errors import BulkWriteError
 
 
 def build_campaign(r) -> Dict:
@@ -63,84 +64,70 @@ def flush_session(bag: List[Dict], user_id: int,
     ))
 
 
+def insert_batches(collection, docs: List[Dict], batch_size=1000):
+    for i in range(0, len(docs), batch_size):
+        batch = docs[i:i + batch_size]
+        try:
+            collection.bulk_write([InsertOne(d) for d in batch], ordered=False)
+        except BulkWriteError as bwe:
+            print(f"Bulk insert error in batch {i // batch_size}: {bwe.details}")
+
+
+def create_indexes(collection):
+    collection.create_index([("userId", ASCENDING), ("sessionStart", DESCENDING)])
+    collection.create_index([("impressions.campaign.advertiserName", ASCENDING),
+                             ("impressions.clicks.clickTimestamp", DESCENDING)])
+    collection.create_index([("impressions.campaign.campaignId", ASCENDING)])
+    collection.create_index([("impressions.campaign.targetingInterest", ASCENDING)])
+
+
 def import_sessions() -> None:
-    session_timeout = timedelta(
-        minutes=int(os.getenv("SESSION_TIMEOUT_MINUTES", "30"))
-    )
+    session_timeout = timedelta(minutes=int(os.getenv("SESSION_TIMEOUT_MINUTES", "30")))
     gdrive_id = os.environ["GDRIVE_EVENTS_FILE_ID"]
     db_name = os.getenv("MONGO_DB", "AdTech")
     coll_name = "sessions"
     csv_sep = os.getenv("CSV_SEPARATOR", ",")
 
-    # 1. Download
     project_root = Path(__file__).resolve().parent
     data_dir = project_root / "data"
     csv_file = data_dir / "sessions.csv"
     print(f"⬇️  Downloading CSV to {csv_file} …")
     gdrive_download(gdrive_id, csv_file)
 
-    # 2. Read
-    print("📖  Reading file …")
     dtype_map = {
         "EventID": "string", "AdvertiserName": "string",
         "CampaignName": "string", "AdSlotSize": "string",
         "Device": "string", "Location": "string", "WasClicked": "bool"
     }
-    date_cols = ["Timestamp", "ClickTimestamp",
-                 "CampaignStartDate", "CampaignEndDate"]
+    date_cols = ["Timestamp", "ClickTimestamp", "CampaignStartDate", "CampaignEndDate"]
 
-    df = pd.read_csv(csv_file, dtype=dtype_map, parse_dates=date_cols, sep=csv_sep)
-
-    df[["SlotW", "SlotH"]] = (
-        df["AdSlotSize"].str.split("x", expand=True).astype(int)
-    )
-
-    # 3. Make a sessions
-    sessions_bulk: List[Dict] = []
-    users_stub: Dict[int, Dict] = {}
-
-    for user_id, grp in df.sort_values(["UserID", "Timestamp"]) \
-            .groupby("UserID"):
-
-        bag, start_ts, last_ts = [], None, None
-        for r in grp.itertuples(index=False):
-            if last_ts is None or r.Timestamp - last_ts > session_timeout:
-                flush_session(bag, user_id, start_ts, last_ts, sessions_bulk)
-                bag, start_ts = [], r.Timestamp  # початок нової сесії
-            bag.append(build_impression(r))
-            last_ts = r.Timestamp
-
-        flush_session(bag, user_id, start_ts, last_ts, sessions_bulk)
-
-        # мінімальний юзер-профіль
-        # users_stub[user_id] = dict(
-        #     _id=user_id,
-        #     userId=user_id,
-        #     firstSeen=grp.Timestamp.min(),
-        #     lastSeen=grp.Timestamp.max()
-        # )
-
-    # 4. Insert
-    uri = build_mongo_uri()
-    safe_uri_for_log = uri.replace(f":{os.getenv('MONGO_PASSWORD', '')}@", ":***@")
-    print(f"Connecting to {safe_uri_for_log} …")
-
-    # Connect and insert
+    print("📖  Processing CSV in chunks …")
+    chunk_size = 100_000
+    uri = build_mongo_uri(use_docker=True)
     client = MongoClient(uri)
     db = client[db_name]
     collection = db[coll_name]
 
-    if sessions_bulk:
-        db.sessions.bulk_write([InsertOne(s) for s in sessions_bulk],
-                               ordered=False)
-    # if users_stub:
-    #     db.users_profile.bulk_write([InsertOne(u) for u in users_stub.values()],
-    #                                 ordered=False)
+    for chunk in pd.read_csv(csv_file, dtype=dtype_map, parse_dates=date_cols, sep=csv_sep, chunksize=chunk_size):
+        chunk[["SlotW", "SlotH"]] = chunk["AdSlotSize"].str.split("x", expand=True).astype(int)
 
-    print(f"Loaded {len(users_stub)} users / {len(sessions_bulk)} sessions from {csv_file}")
+        sessions_bulk: List[Dict] = []
+        for user_id, grp in chunk.sort_values(["UserID", "Timestamp"]).groupby("UserID"):
+            bag, start_ts, last_ts = [], None, None
+            for r in grp.itertuples(index=False):
+                if last_ts is None or r.Timestamp - last_ts > session_timeout:
+                    flush_session(bag, user_id, start_ts, last_ts, sessions_bulk)
+                    bag, start_ts = [], r.Timestamp
+                bag.append(build_impression(r))
+                last_ts = r.Timestamp
+            flush_session(bag, user_id, start_ts, last_ts, sessions_bulk)
 
-    # Create index
-    collection.create_index([("userId", ASCENDING), ("sessionStart", DESCENDING)])
+        if sessions_bulk:
+            insert_batches(collection, sessions_bulk, batch_size=1000)
+
+    create_indexes(collection)
+    client.close()
+    print("✅ All sessions imported and indexed.")
 
 
 def main() -> None:

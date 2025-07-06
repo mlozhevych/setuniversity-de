@@ -1,0 +1,35 @@
+services:
+  mongodb:
+    image: mongo:latest
+    restart: always
+    container_name: mongodb
+    env_file: .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=passw0rd
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    deploy:
+      resources:
+        limits:
+          memory: 4g
+          cpus: '2.0'
+
+  mongo-seed:
+    build: .
+    depends_on:
+      - mongodb
+    env_file: .env
+    environment:
+      - PYTHONPATH=/app/src
+    entrypoint: >
+      bash -c "
+        sleep 8 &&
+        poetry run import_users &&
+        poetry run import_sessions
+      "
+
+volumes:
+  mongo_data:

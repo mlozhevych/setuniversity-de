@@ -8,15 +8,20 @@ import pandas as pd
 import pymongo
 
 
-def build_mongo_uri() -> str:
-    """Складає URI, якщо повністю не вказаний у .env."""
+def build_mongo_uri(use_docker: bool = False) -> str:
+    """Складає URI для MongoDB в залежності від оточення (docker чи локально)."""
     if uri := os.getenv("MONGO_URI"):
         return uri
-
-    host = os.getenv("MONGO_HOST", "localhost")
-    port = os.getenv("MONGO_PORT", "27017")
-    user = os.getenv("MONGO_USER")
-    pwd = os.getenv("MONGO_PASSWORD")
+    if use_docker:
+        host = os.getenv("MONGO_DOCKER_HOST", "mongodb")
+        port = os.getenv("MONGO_DOCKER_PORT", "27017")
+        user = os.getenv("MONGO_USER")
+        pwd = os.getenv("MONGO_PASSWORD")
+    else:
+        host = os.getenv("MONGO_HOST", "localhost")
+        port = os.getenv("MONGO_PORT", "27017")
+        user = os.getenv("MONGO_USER")
+        pwd = os.getenv("MONGO_PASSWORD")
 
     if user and pwd:
         # URL-encode, щоб спецсимволи не зламали рядок
