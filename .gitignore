@@ -42,8 +42,6 @@ HW-2/analyze-ads/.env
 /HW-2/analyze-ads/correlation_results.json
 **/query.sql
 
-.idea/dataSources.xml
-.idea/sqldialects.xml
-.idea/vcs.xml
-.idea/misc.xml
-.idea/setuniversity-de.iml
+
+
+.idea/
