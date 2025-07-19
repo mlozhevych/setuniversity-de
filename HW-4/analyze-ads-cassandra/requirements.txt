@@ -1,5 +1,6 @@
-pymongo
 pandas
 python-dateutil
 gdown
-dotenv
+python-dotenv
+rich
+cassandra-driver

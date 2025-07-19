@@ -2,4 +2,4 @@ pymongo
 pandas
 python-dateutil
 gdown
-dotenv
+python-dotenv

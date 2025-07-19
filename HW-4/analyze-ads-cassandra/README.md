@@ -106,14 +106,14 @@ _Примітка: poetry run виконує команди у віртуаль�
 аналітичних зрізів. Ключовий простір adtech створюється автоматично.
 
 #### Основні аналітичні таблиці:
-![adtech.png](../../../docs/adtech.png)
+![adtech.png](docs/adtech.png)
 
-`campaign_daily_metrics`
+- [`campaign_daily_metrics`](src/analyze_ads_cassandra/cassandra_queries/README.md#1-campaign_daily_metrics)
 
-`top_advertisers_by_spend`
+- [`top_advertisers_by_spend`](src/analyze_ads_cassandra/cassandra_queries/README.md#2-top_advertisers_by_spend)
 
-`user_engagement_history`
+- [`user_engagement_history`](src/analyze_ads_cassandra/cassandra_queries/README.md#3-user_engagement_history)
 
-`top_users_by_clicks`
+- [`top_users_by_clicks`](src/analyze_ads_cassandra/cassandra_queries/README.md#4-top_users_by_clicks)
 
-`top_advertisers_by_spend`
+- [`top_advertisers_by_region`](src/analyze_ads_cassandra/cassandra_queries/README.md#5-top_advertisers_by_region)

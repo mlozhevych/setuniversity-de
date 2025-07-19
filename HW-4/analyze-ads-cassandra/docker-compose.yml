@@ -1,0 +1,18 @@
+services:
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    environment:
+      CASSANDRA_CLUSTER_NAME: "TestCluster"
+      CASSANDRA_NUM_TOKENS: 8
+      CASSANDRA_START_RPC: "true"
+      MAX_HEAP_SIZE: 512M
+      HEAP_NEWSIZE: 100M
+    ports:
+      - "9042:9042"   # CQL
+      - "9160:9160"   # Thrift (optional)
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+
+volumes:
+  cassandra_data:
