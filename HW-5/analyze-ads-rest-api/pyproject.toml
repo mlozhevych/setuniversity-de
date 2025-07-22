@@ -1,0 +1,29 @@
+[project]
+name = "analyze-ads-rest-api"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Mykyta Lozhevych",email = "m.lozhevych@setuniversity.edu.ua"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "dotenv (>=0.9.9,<0.10.0)",
+    "flask (>=3.1.1,<4.0.0)",
+    "gunicorn (>=23.0.0,<24.0.0)",
+    "redis (>=6.2.0,<7.0.0)",
+    "flask-sqlalchemy (>=3.1.1,<4.0.0)",
+    "flask-smorest (>=0.46.1,<0.47.0)",
+    "pymysql (>=1.1.1,<2.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "analyze_ads_rest_api", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+runserver = "analyze_ads_rest_api.app:server"
