@@ -77,12 +77,11 @@ class CampaignPerformanceResource(MethodView):
         ctr = (result.Clicks / result.Impressions) * 100 if result.Impressions else 0
         result = result._asdict()  # Convert SQLAlchemy result to dict
         result["CTR"] = round(ctr, 4)
-        print(result["CampaignID"])
 
         # 3. Store the result in Redis with a 30-second TTL
         try:
             cache_set(cache_key, result, 30)
-        except redis.exceptions.ConnectionError as e:
+        except (redis.exceptions.ConnectionError, redis.exceptions.RedisError) as e:
             print(f"Could not write to Redis: {e}")
 
         return {"CampaignID": result["CampaignID"], "CampaignName": result["CampaignName"],
