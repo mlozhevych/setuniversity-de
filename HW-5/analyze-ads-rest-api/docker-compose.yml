@@ -2,19 +2,44 @@ version: '3.8'
 
 services:
   redis:
-    image: redis:latest
-    container_name: redis-server
+    image: redis:alpine
+    container_name: analyze-ads-redis
     ports:
       - "6379:6379"
-    command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
-    restart: unless-stopped
+    command: redis-server --appendonly yes
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 10s
       retries: 3
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: analyze-ads-api
+    ports:
+      - "5002:5002"
+    environment:
+      - DATABASE_HOST=host.docker.internal
+      - DATABASE_USER=adtech
+      - DATABASE_DB=AdTech
+      - DATABASE_PASSWORD=adtechpass
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - TTL_CAMPAIGN=30
+      - TTL_ADVERTISER=300
+      - TTL_USER=60
+      - FLASK_ENV=production
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./src:/app/src
+    restart: unless-stopped
 
 volumes:
   redis_data:
