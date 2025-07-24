@@ -23,7 +23,7 @@ DATABASE_DB = os.getenv('DATABASE_DB', 'AdTech')
 
 server.config[
     'SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}/{DATABASE_DB}"
-server.config["API_TITLE"] = "REST API for library management"
+server.config["API_TITLE"] = "REST API for Ad management"
 server.config["API_VERSION"] = "v1"
 server.config["OPENAPI_VERSION"] = "3.0.3"
 server.config["OPENAPI_URL_PREFIX"] = "/"

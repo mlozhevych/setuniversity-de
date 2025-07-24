@@ -27,3 +27,4 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 runserver = "analyze_ads_rest_api.app:server"
+runbenchmark = "analyze_ads_rest_api.benchmark:main"
