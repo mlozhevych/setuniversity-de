@@ -51,6 +51,8 @@ RESTful API, розроблений на Flask, для аналізу ефект
 
 Стек: Docker, Docker Compose, Python, Poetry, Flask, Redis, MySQL.
 
+--- 
+
 ### [Практична робота №8: Робота з Kafka (producer)](HW-8/kafka-producer/README.md)
 
 Продюсер Kafka, розроблений на Python, для симуляції потоку даних у реальному часі. Програма послідовно зчитує твіти з
