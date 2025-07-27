@@ -41,7 +41,7 @@ HW-2/analyze-ads/.env
 /HW-2/analyze-ads/src/analyze_ads/queries/old/
 /HW-2/analyze-ads/correlation_results.json
 **/query.sql
-
+HW-8/kafka-producer/data/
 
 
 .idea/
