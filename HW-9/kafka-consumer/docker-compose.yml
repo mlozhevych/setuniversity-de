@@ -1,0 +1,82 @@
+version: '3.8'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - kafka-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_MESSAGE_MAX_BYTES: 2000000
+    volumes:
+      - ./data:/var/lib/kafka/data
+    networks:
+      - kafka-network
+
+  tweet-producer:
+    build:
+      context: ../../HW-8/kafka-producer
+      dockerfile: Dockerfile
+    container_name: tweet-producer
+    depends_on:
+      - kafka
+    restart: on-failure
+    networks:
+      - kafka-network
+
+  tweet-consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tweet-consumer
+    depends_on:
+      - kafka
+      - tweet-producer
+    restart: on-failure
+    volumes:
+      - ./output_data:/app/data # Mount a local directory to persist CSV files
+    networks:
+      - kafka-network
+
+networks:
+  kafka-network:
+    driver: bridge
+#  producer:
+#    build:
+#      context: ../../HW-8/kafka-producer
+#    container_name: kafka-producer
+#    depends_on:
+#      - kafka
+#    environment:
+#      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+#  consumer:
+#    build:
+#      context: ./kafka-consumer
+#    container_name: kafka-consumer
+#    depends_on:
+#      - kafka
+#    volumes:
+#      - ./kafka-consumer/output:/app/output
+#    environment:
+#      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+

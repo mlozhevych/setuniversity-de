@@ -42,6 +42,10 @@ HW-2/analyze-ads/.env
 /HW-2/analyze-ads/correlation_results.json
 **/query.sql
 HW-8/kafka-producer/data/
+HW-9/kafka-consumer/src/kafka_consumer/data/
+HW-9/kafka-consumer/data/
+
+
 
 
 .idea/
