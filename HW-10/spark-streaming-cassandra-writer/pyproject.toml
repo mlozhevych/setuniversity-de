@@ -1,0 +1,24 @@
+[project]
+name = "spark-streaming-cassandra-writer"
+version = "0.1.0"
+description = "Spark Streaming writer for Wikipedia events to Cassandra"
+authors = [
+    {name = "Mykyta Lozhevych", email = "m.lozhevych@setuniversity.edu.ua"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "pyspark==3.5.6",
+    "cassandra-driver>=3.29.0",
+    "dotenv (>=0.9.9,<0.10.0)"
+]
+
+[tool.poetry]
+packages = [{include = "spark_cassandra_writer", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+run-writer = "spark_cassandra_writer.writer:main"

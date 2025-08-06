@@ -1,0 +1,25 @@
+[project]
+name = "wikipedia-stream-generator"
+version = "0.1.0"
+description = "Wikipedia stream generator for Kafka"
+authors = [
+    {name = "Mykyta Lozhevych", email = "m.lozhevych@setuniversity.edu.ua"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "kafka-python (>=2.2.15,<3.0.0)",
+    "requests>=2.31.0",
+    "sseclient-py>=1.7.2",
+    "dotenv (>=0.9.9,<0.10.0)"
+]
+
+[tool.poetry]
+packages = [{include = "stream_generator", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+run-generator = "stream_generator.generator:main"

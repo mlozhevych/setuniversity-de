@@ -1,0 +1,4 @@
+"""
+Wikipedia stream generator package.
+"""
+
