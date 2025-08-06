@@ -71,3 +71,13 @@ RESTful API, розроблений на Flask, для аналізу ефект
 Система повністю розгортається за допомогою Docker Compose.
 
 Стек: Docker, Docker Compose, Python, Poetry, Kafka.
+
+---
+
+### [Практична робота №10: Потокова обробка даних з Kafka та Spark](HW-10/README.md)
+
+Система потокової обробки даних з використанням Apache Kafka та Apache Spark. Проєкт складається з трьох основних компонентів: генератор потоку даних, процесор потокових даних та записувач даних у Cassandra.
+
+Стек: Docker, Docker Compose, Python, Apache Kafka, Apache Spark, Apache Cassandra.
+
+---

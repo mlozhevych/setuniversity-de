@@ -1,4 +1,4 @@
-# HW-10: Wikipedia Stream Processing with Spark, Kafka and Cassandra
+# Wikipedia Stream Processing with Spark, Kafka and Cassandra
 
 Цей проект демонструє повний конвеєр потокової обробки даних у реальному часі з використанням Apache Spark Streaming,
 Apache Kafka та Apache Cassandra. Система обробляє події створення сторінок з Wikipedia API, фільтрує їх за заданими
@@ -91,17 +91,17 @@ CREATE TABLE wikipedia.page_creations
 
 ## Компоненти системи
 
-### Stream Generator
+### [Stream Generator](stream-generator/README.md)
 
 Генератор потоку даних використовує бібліотеку sseclient-py для підключення до SSE (Server-Sent Events) потоку Wikipedia
 API. Він отримує події створення сторінок у реальному часі та надсилає їх у Kafka-топік "input".
 
-### Spark Streaming Processor
+### [Spark Streaming Processor](spark-streaming-processor/README.md)
 
 Цей компонент використовує Apache Spark Streaming для обробки даних з Kafka. Він читає дані з топіка `input`, фільтрує
 їх за зазначеними вище критеріями та надсилає оброблені дані в топік `processed`.
 
-### Spark Streaming Cassandra Writer
+### [Spark Streaming Cassandra Writer](spark-streaming-cassandra-writer/README.md)
 
 Цей компонент читає оброблені дані з Kafka-топіка `processed` та зберігає їх у таблицю Cassandra. Він використовує Spark
 Cassandra Connector для ефективного запису даних у Cassandra.
